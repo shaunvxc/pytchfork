@@ -21,14 +21,3 @@ class pytchfork(object):
                     proc.join()
 
         return spawn_procs
-'''
-def multiprocess(num_procs = 2):
-    def wrap(f):
-        def spawn_procs(*args):
-            for x in range(0, num_procs):
-                p = Process(target=f, args=(args))
-                p.start()
-
-        return spawn_procs
-    return wrap
-'''
