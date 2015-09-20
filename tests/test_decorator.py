@@ -21,6 +21,3 @@ def test_decorated_calls():
     x = Dummy()
     x.test_call(data)
     assert len(data) == NUM_PROCS
-
-
-test_decorated_calls()
