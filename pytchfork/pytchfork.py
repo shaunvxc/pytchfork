@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from multiprocessing import Process
+from multiprocessing import Process, Pool
 import functools
 
 class pytchfork(object):
@@ -24,3 +24,13 @@ class pytchfork(object):
         spawn_procs.__wrapped__ = f
 
         return spawn_procs
+
+    ''' create a non daemonic pool subclass? '''
+    def __enter__(self):
+        self.pool = Pool(self.num_procs)
+        return self.pool
+
+    def __exit__(self, *args):
+        self.pool.close()
+        self.pool.join()
+        self.pool.terminate()
