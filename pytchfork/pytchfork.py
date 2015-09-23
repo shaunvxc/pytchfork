@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from multiprocessing import Process
+import functools
 
 class pytchfork(object):
 
@@ -9,7 +10,6 @@ class pytchfork(object):
         self.procs = []
 
     def __call__(self, f):
-
         def spawn_procs(*args):
             for x in range(0, self.num_procs):
                 p = Process(target=f, args=(args))
@@ -19,5 +19,8 @@ class pytchfork(object):
             if self.join:
                 for proc in self.procs:
                     proc.join()
+
+        functools.update_wrapper(spawn_procs, f)
+        spawn_procs.__wrapped__ = f
 
         return spawn_procs
