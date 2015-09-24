@@ -2,8 +2,8 @@
 Small library to simplify working with python's multiprocessing package.  Abstracts away the common boilerplate code needed to work with multiprocessing.
 
 #Usage
-You can easily mark methods to be run using multiple processes by invoking the pytchfork decorator:
 ###Decorator
+You can easily mark methods to be run using multiple processes by invoking the pytchfork decorator:
 ```python
 from pytchfork import pytchfork
 
