@@ -10,5 +10,6 @@ setup(
     author_email='shaunvig114@gmail',
     url='https://github.com/shaunvxc/pytchfork',
     packages=['pytchfork'],
+    scripts=['bin/pytchfork'],
     zip_safe=True
 )

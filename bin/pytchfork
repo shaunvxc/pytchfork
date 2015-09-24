@@ -1,0 +1,62 @@
+#!/usr/bin/python
+''' 
+For using pytchfork from the command line
+''' 
+from multiprocessing import Process
+
+import os
+import sys
+
+NUM_PROCS = 2
+BASE_COMMAND_PACKAGE = "python -m {}.bin {}"
+BASE_COMMAND_MODULE  = "python {}"
+
+def _fork_exec(target_command):
+    procs = _spawn_processes(target_command)
+    _join_processes(procs)
+
+def _spawn_processes(target_command):
+    procs = []
+    for x in range(0, NUM_PROCS):
+        p = Process(target=execute_command, args=(target_command,))
+        p.start()
+        procs.append(p)
+    return procs
+
+def execute_command(target_command):
+    os.system(target_command)
+	
+def _join_processes(procs):
+    for proc in procs:
+         proc.join()
+
+def _print_usage():
+    print "Usage: 1.`pytchfork target [num_procs] ` "
+    print "       i.e.: pytchfork test.py 3 "
+    print "    or 2.`pytchfork package target [num_procs] ` "
+    print "       i.e.: pytchfork scraper.bin scrape_data 5 "
+
+def _procs_given(args):
+    if args[len(args) - 1].isdigit():
+        NUM_PROCS = int(args[len(args) - 1])
+        return True
+    return False
+
+if __name__ == '__main__':
+    if len(sys.argv) >= 2:
+        ''' clean up the below!! ''' 
+        if len(sys.argv) == 2:
+            _fork_exec(BASE_COMMAND_MODULE.format(sys.argv[1]))
+        elif len(sys.argv) == 4:
+            NUM_PROCS = int(sys.argv[3])
+            _fork_exec(BASE_COMMAND_PACKAGE.format(sys.argv[1], sys.argv[2]))
+        elif len(sys.argv) == 3:
+            if sys.argv[2].isdigit():
+                NUM_PROCS = int(sys.argv[2])
+                _fork_exec(BASE_COMMAND_MODULE.format(sys.argv[1]))
+            else:
+                _fork_exec(BASE_COMMAND_PACKAGE.format(sys.argv[1], sys.argv[2]))
+        else:
+            _print_usage()
+    else:
+        _print_usage()
