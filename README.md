@@ -1,5 +1,5 @@
 # pytchfork
-Small library to decorate functions that should be run using python's multiprocessing module.  Currently a work in progress.
+Small library to simplify working with python's multiprocessing package.  Abstracts away the common boilerplate code needed to work with multiprocessing.
 
 #Usage
 You can easily mark methods to be run using multiple processes by invoking the pytchfork decorator:
@@ -38,3 +38,4 @@ from pytchfork import pytchfork
         res = forked.map_async(process_data, data, callback=callback)
 ```
 
+This construct ensures that the worker processes will be closed, joined and terminated upon the completion of the code in the block. 
