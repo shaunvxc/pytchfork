@@ -13,6 +13,20 @@ def do_work(queue):
   process(data)
 
 ```
+Pytchfork can also manage queues for worker processes.  Just provide the necessary references to the decorator and
+it will take care of polling the queue to pass data to the worker processes.
+
+```python
+from pytchfork import pytchfork
+
+@pytchfork(3, work_queue, finished_queue, queue_sentinel)
+def process_data(data):
+  processed_data = do_something(data)
+  return processed_data
+
+process_data() # this call will fork 3 processes that read from 
+               # work_queue & write to finished_queue.
+```
 
 ###Command Line
 You can also call pytchfork from the command line to run your python modules & packages across multiple processes.
