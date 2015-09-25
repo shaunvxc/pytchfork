@@ -1,5 +1,5 @@
 # pytchfork
-Small library to simplify working with python's multiprocessing package.  Abstracts away the common boilerplate code needed to work with multiprocessing.
+Pytchfork simplifies working with python's multiprocessing package.  By abstracting away the common boilerplate associated with forking processes and managing queues, pytchfork will allow you to write cleaner and more readable multiprocessing code.
 
 #Usage
 ###Decorator
