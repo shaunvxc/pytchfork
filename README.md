@@ -6,12 +6,16 @@ Pytchfork simplifies working with python's multiprocessing package.  By abstract
 You can easily mark methods to be run using multiple processes by invoking the pytchfork decorator:
 ```python
 from pytchfork import pytchfork
+from multiprocessing import Queue
 
 @pytchfork(3)
 def do_work(queue):
   data = queue.get()
   process(data)
 
+queue = Queue()
+...
+do_work(queue) # this call will fork 3 processes
 ```
 Pytchfork can also manage queues for worker processes.  Just provide the necessary references to the decorator and
 it will take care of polling the queue to pass data to the worker processes.
