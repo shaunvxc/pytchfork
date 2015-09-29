@@ -11,7 +11,7 @@ class pytchfork(object):
         self.finished_queue = finished_queue
         self.queue_sentinel = queue_sentinel
         self.join = join
-        self.manage_procs = work_queue is not None and finished_queue is not None and queue_sentinel is not None
+        self.manage_procs = work_queue is not None and queue_sentinel is not None
 
     def __call__(self, f):
         def spawn_procs(*args):
@@ -47,7 +47,10 @@ def _manage_work(f, work_queue, finished_queue, queue_sentinel):
     while True:
         work = work_queue.get()
         if work == queue_sentinel:
-            finished_queue.put(queue_sentinel)
+            if finished_queue is not None:
+                finished_queue.put(queue_sentinel)
             break
         elif work is not None:
-            finished_queue.put(f(work))
+            res = f(work)
+            if finished_queue is not None:
+                finished_queue.put(res)
