@@ -74,7 +74,7 @@ def test_pytchfork_manage_work_worker_only():
     Dummy().test_worker_only()
     # ideally would like to assert that there are no active processes but am having trouble with this..
     # for now, hanging on a test run indicates a failure..
-'''
+
 def test_redis():
     # connect to redis
     client = redis.StrictRedis(host='localhost', port=6379)
@@ -104,4 +104,3 @@ def test_redis():
 
     assert sentinel_ct == NUM_PROCS # unfortunately redundant
     assert total_ct == 100
-'''
