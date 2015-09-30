@@ -102,5 +102,5 @@ def test_redis():
         elif x[1] is not None:
             total_ct = total_ct + 1
 
-    assert sentinel_ct == NUM_PROCS # unfortunately redundant
+    assert sentinel_ct == NUM_PROCS
     assert total_ct == 100
