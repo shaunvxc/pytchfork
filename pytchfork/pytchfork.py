@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 from multiprocessing import Process, Pool
 import functools
+import redis
 
 class pytchfork(object):
 
-    def __init__(self, num_procs, work_queue=None, finished_queue=None, queue_sentinel=None, join=True):
+    def __init__(self, num_procs, work_queue=None, done_queue=None, sentinel=None, redis_uri=None, redis_port=None, join=True):
         self.num_procs = num_procs
         self.procs = []
         self.work_queue = work_queue
-        self.finished_queue = finished_queue
-        self.queue_sentinel = queue_sentinel
+        self.done_queue = done_queue
+        self.sentinel = sentinel
         self.join = join
-        self.manage_procs = work_queue is not None and queue_sentinel is not None
+        self.manage_redis = work_queue is not None and redis_uri is not None and redis_port is not None
+        self.redis_client = None if not self.manage_redis else redis.StrictRedis(host=redis_uri, port=redis_port)
+        self.manage_procs = work_queue is not None and sentinel is not None
 
     def __call__(self, f):
         def spawn_procs(*args):
             for x in range(0, self.num_procs):
-                if self.manage_procs:
-                    # target _manage_work to handle passing values to and from the work/finished queues
-                    p = Process(target=_manage_work, args=(f, self.work_queue, self.finished_queue, self.queue_sentinel))
-                else:
-                    p = Process(target=f, args=(args))
+                target_fn, target_args = self._get_target_and_args(f, args)
+                p = Process(target=target_fn, args = target_args)
                 p.start()
                 self.procs.append(p)
 
@@ -33,6 +33,14 @@ class pytchfork(object):
 
         return spawn_procs
 
+    def _get_target_and_args(self, f, args):
+        if self.manage_redis:
+            return _manage_redis, (f, self.redis_client, self.work_queue, self.done_queue, self.sentinel)
+        elif self.manage_procs:
+            return _manage_work,  (f, self.work_queue, self.done_queue, self.sentinel)
+        else:
+            return f, args
+
     def __enter__(self):
         self.pool = Pool(self.num_procs)
         return self.pool
@@ -41,6 +49,19 @@ class pytchfork(object):
         self.pool.close()
         self.pool.join()
         self.pool.terminate()
+
+''' manage a worker process reading from a redis instance '''
+def _manage_redis(f, redis_client, work_queue, done_queue, sentinel):
+    while True:
+        work = redis_client.brpop(work_queue)
+        if work[1] == sentinel: # and sentinel is not None:
+            if done_queue is not None:
+                redis_client.lpush(done_queue,sentinel)
+            break
+        elif work is not None:
+            res = f(work[1])
+            if done_queue is not None:
+                redis_client.lpush(done_queue, res)
 
 ''' manage a worker process '''
 def _manage_work(f, work_queue, finished_queue, queue_sentinel):
