@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from .pytchfork import pytchfork, _manage_work
+from .pytchfork import pytchfork, manage_work, manage_redis

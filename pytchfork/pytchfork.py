@@ -50,6 +50,12 @@ class pytchfork(object):
         self.pool.join()
         self.pool.terminate()
 
+def manage_redis(f, redis_client, work_queue, done_queue, sentinel):
+    _manage_redis(f, redis_client, work_queue, done_queue, sentinel)
+
+def manage_work(f, work_queue, finished_queue, queue_sentinel):
+    _manage_work(f, work_queue, finished_queue, queue_sentinel)
+
 ''' manage a worker process reading from a redis instance '''
 def _manage_redis(f, redis_client, work_queue, done_queue, sentinel):
     while True:
