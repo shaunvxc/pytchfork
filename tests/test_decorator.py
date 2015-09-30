@@ -32,7 +32,7 @@ class Dummy():
 
     @pytchfork(NUM_PROCS,redis_work_queue, redis_done_queue, sentinel, redis_uri='localhost', redis_port=6379)
     def test_redis_decorator(data):
-        print data
+        return data
 
 def test_decorated_calls():
     data = Manager().list()
