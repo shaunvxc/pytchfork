@@ -1,4 +1,4 @@
-from pytchfork import pytchfork
+from pytchfork import pytchfork, _manage_work
 from multiprocessing import Queue, Manager
 import mock
 import redis
