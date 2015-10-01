@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from pytchfork import manage_work, manage_redis
 from multiprocessing import Queue
 import redis

@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from pytchfork import pytchfork
 from multiprocessing import Queue, Manager
 import mock
