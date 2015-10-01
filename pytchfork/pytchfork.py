@@ -5,13 +5,12 @@ import redis
 
 class pytchfork(object):
 
-    def __init__(self, num_procs, work_queue=None, done_queue=None, sentinel=None, redis_uri=None, redis_port=None, join=True):
+    def __init__(self, num_procs, work_queue=None, done_queue=None, sentinel=None, redis_uri=None, redis_port=None):
         self.num_procs = num_procs
         self.procs = []
         self.work_queue = work_queue
         self.done_queue = done_queue
         self.sentinel = sentinel
-        self.join = join
         self.manage_redis = work_queue is not None and redis_uri is not None and redis_port is not None
         self.redis_client = None if not self.manage_redis else redis.StrictRedis(host=redis_uri, port=redis_port)
         self.manage_procs = work_queue is not None and sentinel is not None
@@ -24,13 +23,11 @@ class pytchfork(object):
                 p.start()
                 self.procs.append(p)
 
-            if self.join:
-                for proc in self.procs:
-                    proc.join()
+            for proc in self.procs:
+                proc.join()
 
         functools.update_wrapper(spawn_procs, f)
         spawn_procs.__wrapped__ = f
-
         return spawn_procs
 
     def _get_target_and_args(self, f, args):
@@ -62,7 +59,7 @@ def _manage_redis(f, redis_client, work_queue, done_queue, sentinel):
         work = redis_client.brpop(work_queue)
         if work[1] == sentinel: # and sentinel is not None:
             if done_queue is not None:
-                redis_client.lpush(done_queue,sentinel)
+                redis_client.lpush(done_queue, sentinel)
             break
         elif work is not None:
             res = f(work[1])
