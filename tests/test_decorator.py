@@ -3,7 +3,6 @@ from pytchfork import pytchfork
 from multiprocessing import Queue, Manager
 import mock
 import redis
-import sys
 
 NUM_PROCS = 2
 
@@ -92,7 +91,6 @@ def test_redis():
 
     # run decorated method
     Dummy().test_redis_decorator()
-    sys.stdout.write("done with decorated call")
 
     # evaluate the results
     total_ct = sentinel_ct = 0
@@ -100,12 +98,10 @@ def test_redis():
         x = client.brpop(redis_done_queue)
         if x[1] == sentinel:
             sentinel_ct = sentinel_ct + 1
-            sys.stdout.write("processed sentinel: sentinel_ct=")
             if sentinel_ct == NUM_PROCS:
                 break
         elif x[1] is not None:
             total_ct = total_ct + 1
-            sys.stdout.write("total_ct")
 
     assert sentinel_ct == NUM_PROCS
     assert total_ct == 100
