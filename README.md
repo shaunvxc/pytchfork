@@ -21,7 +21,7 @@ queue = Queue()
 do_work(queue) # this call will fork 3 processes
 ```
 Pytchfork can also manage queues for worker processes.  Just provide the necessary references to the decorator and
-it will take care of polling the queue to pass data to the worker processes.
+it will take care of polling the queue and passing data to the workers.
 
 ```python
 from pytchfork import pytchfork
