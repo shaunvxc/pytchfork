@@ -103,3 +103,11 @@ from pytchfork import pytchfork
 ```
 
 This construct ensures that the worker processes will be closed, joined and terminated upon the completion of the code in the block. 
+
+## Contributing
+1. Fork it ( https://github.com/shaunvxc/pytchfork/fork )
+1. Create your feature branch (`git checkout -b new-feature`)
+1. Commit your changes (`git commit -am 'Add some feature'`)
+1. Run the tests (`make test`)
+1. Push change to the branch (`git push origin new-feature`)
+1. Create a Pull Request
