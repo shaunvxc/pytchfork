@@ -4,7 +4,7 @@ all: clean build test
 
 clean:
 	@echo "Removing junk..."
-	rm -rf .coverage
+	rm -f .coverage
 	rm -f *.txt~
 	rm -f tests/*.py~
 	rm -f pytchfork/*.py~
