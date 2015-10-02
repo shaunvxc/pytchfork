@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from multiprocessing import Process, Pool
-import functools
+from functools import wraps
 import redis
 
 class pytchfork(object):
@@ -16,6 +16,7 @@ class pytchfork(object):
         self.manage_procs = work_queue is not None and sentinel is not None
 
     def __call__(self, f):
+        @wraps(f)
         def spawn_procs(*args):
             for x in range(0, self.num_procs):
                 target_fn, target_args = self._get_target_and_args(f, args)
@@ -26,8 +27,6 @@ class pytchfork(object):
             for proc in self.procs:
                 proc.join()
 
-        functools.update_wrapper(spawn_procs, f)
-        spawn_procs.__wrapped__ = f
         return spawn_procs
 
     def _get_target_and_args(self, f, args):
@@ -57,7 +56,7 @@ def manage_work(f, work_queue, finished_queue, queue_sentinel):
 def _manage_redis(f, redis_client, work_queue, done_queue, sentinel):
     while True:
         work = redis_client.brpop(work_queue)
-        if work[1] == sentinel: # and sentinel is not None:
+        if work[1] == sentinel:
             if done_queue is not None:
                 redis_client.lpush(done_queue, sentinel)
             break

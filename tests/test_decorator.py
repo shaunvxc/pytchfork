@@ -3,6 +3,7 @@ from pytchfork import pytchfork
 from multiprocessing import Queue, Manager
 import mock
 import redis
+import sys
 
 NUM_PROCS = 2
 
@@ -12,7 +13,11 @@ done_queue = Queue()
 redis_work_queue = "test_in"
 redis_done_queue = "test_out"
 
-sentinel = "done"
+if sys.version_info[0] == 3:
+    print (" got here " )
+    sentinel = "done".encode("latin-1")
+else:
+    sentinel=  "done"
 
 class Dummy():
 
@@ -77,10 +82,11 @@ def test_pytchfork_manage_work_worker_only():
     # for now, hanging on a test run indicates a failure..
 
 def test_redis():
-    # connect to redis
-    client = redis.StrictRedis(host='localhost', port=6379)
 
-    # load up test data
+    # connect to redis
+    client = redis.StrictRedis(host='localhost', port=6379) # decode_responses=True )
+
+    # Load up test data
     for x in range(0, 100):
         client.lpush(redis_work_queue, x)
 
@@ -88,7 +94,6 @@ def test_redis():
     # be run as daemons)
     for x in range(0, NUM_PROCS):
         client.lpush(redis_work_queue, sentinel)
-
     # run decorated method
     Dummy().test_redis_decorator()
 
