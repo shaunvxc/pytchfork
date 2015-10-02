@@ -16,18 +16,22 @@ class pytchfork(object):
         self.manage_procs = work_queue is not None and sentinel is not None
 
     def __call__(self, f):
+
         @wraps(f)
         def spawn_procs(*args):
+            target_fn, target_args = self._get_target_and_args(f, args)
             for x in range(0, self.num_procs):
-                target_fn, target_args = self._get_target_and_args(f, args)
-                p = Process(target=target_fn, args = target_args)
-                p.start()
-                self.procs.append(p)
+                self._spawn_proc(target_fn, target_args)
 
             for proc in self.procs:
                 proc.join()
 
         return spawn_procs
+
+    def _spawn_proc(self, fn, argz):
+        p = Process(target=fn, args = argz)
+        p.start()
+        self.procs.append(p)
 
     def _get_target_and_args(self, f, args):
         if self.manage_redis:
