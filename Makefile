@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-all: clean build test
+all: clean setup test
 
 clean:
 	@echo "Removing junk..."
@@ -15,7 +15,7 @@ init:
 	@echo "Building devmode..."
 	pip install -r requirements.txt
 
-build:
+setup:
 	@echo "Installing package locally..."
 	python setup.py install
 
