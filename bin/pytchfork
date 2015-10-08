@@ -1,31 +1,33 @@
 #!/usr/bin/python
-''' 
+'''
 For using pytchfork from the command line
-''' 
+'''
 from multiprocessing import Process
 
-import os
+import subprocess
+import argparse
+
 import sys
 from sys import stdout
 
-NUM_PROCS = 2
-BASE_COMMAND_PACKAGE = "python -m {}.bin {}"
-BASE_COMMAND_MODULE  = "python {}"
+DEFAULT_NUM_PROCS = 2
 
-def _fork_exec(target_command):
-    procs = _spawn_processes(target_command)
+def _pytchfork(target_command, target_args, num_procs):
+    procs = _spawn_processes(target_command, target_args, num_procs)
     for proc in procs: proc.join()
 
-def _spawn_processes(target_command):
+def _spawn_processes(command, target_args, num_procs):
     procs = []
-    for x in range(0, NUM_PROCS):
-        p = Process(target=execute_command, args=(target_command,))
+    for x in range(0, num_procs):
+        p = Process(target=execute_command, args=(command, target_args))
         p.start()
         procs.append(p)
     return procs
 
-def execute_command(target_command):
-    os.system(target_command)
+def execute_command(command, target_args):
+    target_command = [command]
+    target_command.extend(target_args)
+    subprocess.call(target_command)
 
 def _print_usage():
     sys.stdout.write( "Usage: 1.`pytchfork target [num_procs] ` \n")
@@ -33,27 +35,20 @@ def _print_usage():
     sys.stdout.write( "    or 2.`pytchfork package target [num_procs] ` \n")
     sys.stdout.write( "       i.e.: pytchfork scraper.bin scrape_data 5 \n")
 
-def _procs_given(args):
-    if args[len(args) - 1].isdigit():
-        NUM_PROCS = int(args[len(args) - 1])
-        return True
-    return False
+def parse_sys_args(args):
+
+    target_command = args[1]
+
+    if args[len(args) -1 ].isdigit():
+        num_procs = args[len(args) -1]
+        target_args = [ args[i] for i in range(2, len(args) -1)]
+    else:
+        num_procs = DEFAULT_NUM_PROCS
+        target_args = [args[i] for i in range(2, len(args) )]
+
+#    sys.stdout.write(str(target_command) + ' ' + str(target_args) + ' ' + str(num_procs) + '\n')
+    return target_command, target_args, int(num_procs)
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 2:
-        ''' clean up the below!! ''' 
-        if len(sys.argv) == 2:
-            _fork_exec(BASE_COMMAND_MODULE.format(sys.argv[1]))
-        elif len(sys.argv) == 4:
-            NUM_PROCS = int(sys.argv[3])
-            _fork_exec(BASE_COMMAND_PACKAGE.format(sys.argv[1], sys.argv[2]))
-        elif len(sys.argv) == 3:
-            if sys.argv[2].isdigit():
-                NUM_PROCS = int(sys.argv[2])
-                _fork_exec(BASE_COMMAND_MODULE.format(sys.argv[1]))
-            else:
-                _fork_exec(BASE_COMMAND_PACKAGE.format(sys.argv[1], sys.argv[2]))
-        else:
-            _print_usage()
-    else:
-        _print_usage()
+    target_command, target_args, num_procs = parse_sys_args(sys.argv)
+    _pytchfork(target_command, target_args, num_procs)
