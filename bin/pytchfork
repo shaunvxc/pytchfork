@@ -1,9 +1,7 @@
 #!/usr/bin/python
 from multiprocessing import Process
 import subprocess
-
 import sys
-from sys import stdout
 
 def _pytchfork(target_command, target_args, num_procs):
     procs = _spawn_processes(target_command, target_args, num_procs)
@@ -23,9 +21,9 @@ def execute_command(command, target_args):
     subprocess.call(target_command)
 
 def _print_usage():
-    sys.stdout.write( "Usage: 1.`pytchfork target [num_procs] ` \n")
-    sys.stdout.write( "       i.e.: pytchfork -p test.py 3 \n")
-    sys.stdout.write( "    or 2.`pytchfork package target [num_procs] ` \n")
+    sys.stdout.write( "Usage: 1.`pytchfork [-p] target [num_procs] ` \n")
+    sys.stdout.write( "       i.e.: pytchfork -p test.py 3  (-p is short for python) \n  ")
+    sys.stdout.write( "    or 2.`pytchfork -p  package target [num_procs] ` \n")
     sys.stdout.write( "       i.e.: pytchfork -p -m scraper.bin scrape_data 5 \n")
 
 def parse_sys_args(args):
