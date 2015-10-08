@@ -6,6 +6,7 @@ from multiprocessing import Process
 
 import os
 import sys
+from sys import stdout
 
 NUM_PROCS = 2
 BASE_COMMAND_PACKAGE = "python -m {}.bin {}"
@@ -13,7 +14,7 @@ BASE_COMMAND_MODULE  = "python {}"
 
 def _fork_exec(target_command):
     procs = _spawn_processes(target_command)
-    _join_processes(procs)
+    for proc in procs: proc.join()
 
 def _spawn_processes(target_command):
     procs = []
@@ -25,16 +26,12 @@ def _spawn_processes(target_command):
 
 def execute_command(target_command):
     os.system(target_command)
-	
-def _join_processes(procs):
-    for proc in procs:
-         proc.join()
 
 def _print_usage():
-    print "Usage: 1.`pytchfork target [num_procs] ` "
-    print "       i.e.: pytchfork test.py 3 "
-    print "    or 2.`pytchfork package target [num_procs] ` "
-    print "       i.e.: pytchfork scraper.bin scrape_data 5 "
+    sys.stdout.write( "Usage: 1.`pytchfork target [num_procs] ` \n")
+    sys.stdout.write( "       i.e.: pytchfork test.py 3 \n")
+    sys.stdout.write( "    or 2.`pytchfork package target [num_procs] ` \n")
+    sys.stdout.write( "       i.e.: pytchfork scraper.bin scrape_data 5 \n")
 
 def _procs_given(args):
     if args[len(args) - 1].isdigit():
