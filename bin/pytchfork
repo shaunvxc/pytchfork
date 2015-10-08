@@ -33,13 +33,13 @@ def parse_sys_args(args):
     else: target_command = args[1]
 
     if args[len(args) -1 ].isdigit():
-        num_procs = args[len(args) -1]
+        num_procs = int(args[len(args) -1])
         target_args = [ args[i] for i in range(2, len(args) -1)]
     else:
         num_procs = 2 # 2 processes by default
         target_args = [args[i] for i in range(2, len(args) )]
 
-    return target_command, target_args, int(num_procs)
+    return target_command, target_args, num_procs
 
 if __name__ == '__main__':
     target_command, target_args, num_procs = parse_sys_args(sys.argv)
