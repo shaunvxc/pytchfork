@@ -10,9 +10,9 @@ def _pytchfork(target_command, target_args, num_procs):
 def _spawn_processes(command, target_args, num_procs):
     procs = []
     for x in range(0, num_procs):
-        p = Process(target=execute_command, args=(command, target_args))
-        p.start()
-        procs.append(p)
+        procs.append(Process(target=execute_command, args=(command, target_args)))
+        procs[x].start()
+
     return procs
 
 def execute_command(command, target_args):
