@@ -23,8 +23,7 @@ class pytchfork(object):
             for x in range(0, self.num_procs):
                 self._spawn_proc(target_fn, target_args)
 
-            for proc in self.procs:
-                proc.join()
+            for proc in self.procs: proc.join()
 
         return spawn_procs
 
