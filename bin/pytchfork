@@ -1,7 +1,4 @@
 #!/usr/bin/python
-'''
-For using pytchfork from the command line
-'''
 from multiprocessing import Process
 import subprocess
 
