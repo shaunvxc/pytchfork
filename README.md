@@ -79,17 +79,19 @@ process_data() # this will fork 2 processes that read/write to redis. Each proce
 For further reference on this, see the `test_redis()` method in `tests/test_decorator.py`.
 
 ###Command Line
-You can also call pytchfork from the command line to run your python modules & packages across multiple processes.
+You can also call pytchfork from the command line to run any command across multiple processes. python modules & packages across multiple processes.
 
-To run a module:
+To run any command:
+
 ```console
-$ pytchfork your_target_module (num_procs) 
+$ pytchfork target_command [target_command_options] [num_procs] 
 ```
 
-For a package:
+To run a python module/package:
 ```console
-$ pytchfork package_name package_target (num_procs)
+$ pytchfork -p your_target_module [python_target_options] [num_procs)]
 ```
+
 If the optional `num_procs` argument is not provided, 2 will be used as default.
 
 ###Context Manager
