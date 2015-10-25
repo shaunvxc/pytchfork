@@ -27,3 +27,7 @@ test:
 	@echo "Running test..."
 	rm -f .coverage
 	nosetests ./tests/
+
+tags:
+	cd pytchfork; rm -f TAGS; etags *.py
+
