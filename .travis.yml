@@ -20,7 +20,7 @@ install:
 
 # command to run tests
 script:
-  - if [ "$TRAVIS_PYTHON_VERSION" == "2.6" ]; then nosetests --with-coverage .tests/test_decorator.py .tests/unit_tests.py;
-  - if [ "$TRAVIS_PYTHON_VERSION" != "2.6" ]; then nosetests --with-coverage .tests
+  - if [ "$TRAVIS_PYTHON_VERSION" == "2.6" ]; then nosetests --with-coverage .tests/test_decorator.py .tests/unit_tests.py; fi
+  - if [ "$TRAVIS_PYTHON_VERSION" != "2.6" ]; then nosetests --with-coverage .tests; fi
 after_success:
   - coveralls
