@@ -55,7 +55,7 @@ To get the processes to exit upon completetion, pass the `sentinel` argument to 
 Below is an example (verbosity for clarity):
 
 ```python
-from pytchform import pytchfork
+from pytchfork import pytchfork
 import redis
 
 redis_client = redis.StrictRedis(host='localhost', port=6379)
