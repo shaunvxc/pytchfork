@@ -38,7 +38,7 @@ process_data() # this call will fork 3 processes that read from work_queue & wri
 Pytchfork processes can also be configured to read from and write to Redis instances (currently only Redis Lists are supported).  To do so, simply pass the `redis_uri` and `redis_port` to the pytchfork decorator (In addition to string values Redis will use to key the `work_queue` and `done_queue`).  
 
 ```python
-from pytchform import pytchfork
+from pytchfork import pytchfork
 
 @pytchfork(2, "work_queue", "done_queue", redis_uri='localhost', redis_port=6379)
 def process_data(data):
