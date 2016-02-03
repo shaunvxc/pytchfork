@@ -78,22 +78,6 @@ process_data() # this will fork 2 processes that read/write to redis. Each proce
 ```
 For further reference on this, see the `test_redis()` method in `tests/test_decorator.py`.
 
-###Command Line
-You can also call pytchfork from the command line to run any command across multiple processes. 
-
-To run any command:
-
-```console
-$ pytchfork target_command [target_command_options] [num_procs] 
-```
-
-To run a python module/package:
-```console
-$ pytchfork -p your_target_module [python_target_options] [num_procs)]
-```
-
-If the optional `num_procs` argument is not provided, 2 will be used as default.
-
 ###Context Manager
 You can also use the context manager to get hold of a multiprocessing.Pool object, without having to manage the lifecycle of the pool.  I.e.:
 
@@ -105,6 +89,22 @@ from pytchfork import pytchfork
 ```
 
 This construct ensures that the worker processes will be closed, joined and terminated upon the completion of the code in the block. 
+
+###Command Line
+You can also call pytchfork from the command line to run any command across multiple processes. 
+
+To run any command:
+
+```console
+$ pytchfork target_command [target_command_options] [num_procs] 
+```
+
+To run a python module/package:
+```console
+$ pytchfork -p your_target_module [python_target_options] [num_procs]
+```
+
+If the optional `num_procs` argument is not provided, 2 will be used as default.
 
 ## Contributing
 1. Fork it ( https://github.com/shaunvxc/pytchfork/fork )

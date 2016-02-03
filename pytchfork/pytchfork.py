@@ -60,23 +60,19 @@ def _manage_redis(f, redis_client, work_queue, done_queue, sentinel):
     while True:
         work = redis_client.brpop(work_queue)
         if work[1] == sentinel:
-            if done_queue is not None:
-                redis_client.lpush(done_queue, sentinel)
+            if done_queue: redis_client.lpush(done_queue, sentinel)
             break
         elif work is not None:
             res = f(work[1])
-            if done_queue is not None:
-                redis_client.lpush(done_queue, res)
+            if done_queue: redis_client.lpush(done_queue, res)
 
 ''' manage a worker process '''
 def _manage_work(f, work_queue, finished_queue, queue_sentinel):
     while True:
         work = work_queue.get()
         if work == queue_sentinel:
-            if finished_queue is not None:
-                finished_queue.put(queue_sentinel)
+            if finished_queue: finished_queue.put(queue_sentinel)
             break
         elif work is not None:
             res = f(work)
-            if finished_queue is not None:
-                finished_queue.put(res)
+            if finished_queue: finished_queue.put(res)
