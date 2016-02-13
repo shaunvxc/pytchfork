@@ -2,7 +2,13 @@
 from __future__ import unicode_literals
 from multiprocessing import Process, Pool
 from functools import wraps
+
 import redis
+import logging
+import multiprocessing_logging
+
+logging.basicConfig(level=logging.DEBUG)
+multiprocessing_logging.install_mp_handler()
 
 class pytchfork(object):
 
@@ -87,12 +93,6 @@ def _manage_work(f, work_queue, done_queue, sentinel, pid=0):
             if done_queue: done_queue.put(res)
 
 def _get_logger(name, pid=0):
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-
-    import multiprocessing_logging
-    multiprocessing_logging.install_mp_handler()
-
     mp_handler = multiprocessing_logging.MultiProcessingHandler('mp-handler', logging.FileHandler(name))
     logger = logging.Logger('pytchfork_{}'.format(pid))
     logger.addHandler(mp_handler)
