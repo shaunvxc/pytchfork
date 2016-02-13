@@ -32,7 +32,7 @@ class pytchfork(object):
         p.start()
         self.procs.append(p)
 
-    def _get_target_and_args(self, f, args, pid=None):
+    def _get_target_and_args(self, f, args, pid=0):
         if self.manage_redis:
             return _manage_redis, (f, self.redis_client, self.work_queue, self.done_queue, self.sentinel, pid)
         elif self.manage_procs:
@@ -56,7 +56,7 @@ def manage_work(f, work_queue, finished_queue, queue_sentinel):
     _manage_work(f, work_queue, finished_queue, queue_sentinel)
 
 ''' manage a worker process reading from a redis instance '''
-def _manage_redis(f, redis_client, work_queue, done_queue, sentinel, pid=None, log=False):
+def _manage_redis(f, redis_client, work_queue, done_queue, sentinel, pid=0, log=False):
 
     logger = _get_logger('pytchfork.out'.format(f.__name__), pid)
 
@@ -86,7 +86,7 @@ def _manage_work(f, work_queue, done_queue, sentinel, pid=0):
             res = f(work)
             if done_queue: done_queue.put(res)
 
-def _get_logger(name, pid):
+def _get_logger(name, pid=0):
     import logging
     logging.basicConfig(level=logging.DEBUG)
 
