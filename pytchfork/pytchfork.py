@@ -58,35 +58,43 @@ def manage_work(f, work_queue, finished_queue, queue_sentinel):
 ''' manage a worker process reading from a redis instance '''
 def _manage_redis(f, redis_client, work_queue, done_queue, sentinel, pid=None, log=False):
 
-    import sys
-    sys.stdout = open('{}_{}.out'.format(f.__name__, pid), 'w++')
+    logger = _get_logger('pytchfork.out'.format(f.__name__), pid)
 
     while True:
         work = redis_client.brpop(work_queue)
         if work[1] == sentinel:
             if done_queue: redis_client.lpush(done_queue, sentinel)
-            print "{}_{}: sentinel processed, closing...".format(f.__name__, pid)
+            logger.debug( "{}_{}: sentinel processed, closing...".format(f.__name__, pid))
             break
         elif work is not None:
-            print "{}_{}: processing `{}` ".format(f.__name__, pid, work[1])
+            logger.debug( "{}_{}: processing `{}` ".format(f.__name__, pid, work[1]))
             res = f(work[1])
             if done_queue: redis_client.lpush(done_queue, res)
-
-
 
 ''' manage a worker process '''
 def _manage_work(f, work_queue, done_queue, sentinel, pid=0):
 
-    import sys
-    sys.stdout = open('{}_{}.out'.format(f.__name__, pid), 'w++')
-
+    logger = _get_logger('pytchfork.out'.format(f.__name__), pid)
     while True:
         work = work_queue.get()
         if work == sentinel:
             if done_queue: done_queue.put(sentinel)
-            print "{}_{}: sentinel processed, closing...".format(f.__name__, pid)
+            logger.debug( "{}_{}: sentinel processed, closing...".format(f.__name__, pid))
             break
         elif work is not None:
-            print "{}_{}: processing `{}` ".format(f.__name__, pid, work)
+            logger.debug( "{}_{}: processing `{}` ".format(f.__name__, pid, work))
             res = f(work)
             if done_queue: done_queue.put(res)
+
+def _get_logger(name, pid):
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+    import multiprocessing_logging
+    multiprocessing_logging.install_mp_handler()
+
+    mp_handler = multiprocessing_logging.MultiProcessingHandler('mp-handler', logging.FileHandler(name))
+    logger = logging.Logger('pytchfork_{}'.format(pid))
+    logger.addHandler(mp_handler)
+
+    return logger
