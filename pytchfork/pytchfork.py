@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from multiprocessing import Process, Pool
 from functools import wraps
 import redis
