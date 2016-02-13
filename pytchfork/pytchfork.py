@@ -32,7 +32,7 @@ class pytchfork(object):
         self.procs.append(p)
 
     def _get_target_and_args(self, f, args, pid=None):
-        if self.manage_redis
+        if self.manage_redis:
             return _manage_redis, (f, self.redis_client, self.work_queue, self.done_queue, self.sentinel, pid)
         elif self.manage_procs:
             return _manage_work,  (f, self.work_queue, self.done_queue, self.sentinel, pid)
@@ -58,7 +58,7 @@ def manage_work(f, work_queue, finished_queue, queue_sentinel):
 def _manage_redis(f, redis_client, work_queue, done_queue, sentinel, pid=None, log=False):
 
     import sys
-    sys.stdout = open('.{}_{}.out'.format(f.__name__, pid), 'w+')
+    sys.stdout = open('{}_{}.out'.format(f.__name__, pid), 'w++')
 
     while True:
         work = redis_client.brpop(work_queue)
@@ -71,11 +71,13 @@ def _manage_redis(f, redis_client, work_queue, done_queue, sentinel, pid=None, l
             res = f(work[1])
             if done_queue: redis_client.lpush(done_queue, res)
 
+
+
 ''' manage a worker process '''
 def _manage_work(f, work_queue, done_queue, sentinel, pid=0):
 
     import sys
-    sys.stdout = open('.{}_{}.out'.format(f.__name__, pid), 'w++')
+    sys.stdout = open('{}_{}.out'.format(f.__name__, pid), 'w++')
 
     while True:
         work = work_queue.get()
