@@ -3,4 +3,4 @@ coveralls
 mock
 nose
 redis==2.10.3
-multiprocessing_logging
+multiprocessing_logging==0.2.3
