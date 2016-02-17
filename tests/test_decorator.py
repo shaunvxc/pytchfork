@@ -28,7 +28,7 @@ class Dummy():
     def test_call(self, l):
         l.append("1")
 
-    @pytchfork(NUM_PROCS, read_from=work_queue, write_to=done_queue, sentinel=sentinel)
+    @pytchfork(NUM_PROCS, read_from=work_queue, write_to=done_queue, sentinel=sentinel, quiet=True)
     def test_process_data(data):
         return data
 
