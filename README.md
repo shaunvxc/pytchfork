@@ -27,7 +27,7 @@ it will take care of polling the queue and passing data to the workers.
 from pytchfork import pytchfork
 from multiprocessing import Queue
 
-@pytchfork(3, work_queue, done_queue, queue_sentinel)
+@pytchfork(3, read_from=work_queue, write_to=done_queue, sentinel="DONE")
 def process_data(data):
   processed_data = do_something(data)
   return processed_data
@@ -40,7 +40,7 @@ Pytchfork processes can also be configured to read from and write to Redis insta
 ```python
 from pytchfork import pytchfork
 
-@pytchfork(2, "work_queue", "done_queue", redis_uri='localhost', redis_port=6379)
+@pytchfork(2, read_from="work_queue", write_to="done_queue", redis_uri='localhost', redis_port=6379)
 def process_data(data):
   processed_data = do_something(data)
   return processed_data
@@ -48,7 +48,7 @@ def process_data(data):
 process_data() # this will fork 2 processes that read from/write to a local redis instance   
 ```
 
-In the above snippet, these processes will run continuously as daemons.  For more smaller tasks, this might not be desirable. 
+In the above snippet, these processes will run continuously as daemons.  For smaller tasks with fixed amounts of input data, this might not be desirable.
 
 To get the processes to exit upon completetion, pass the `sentinel` argument to the decorator. In order for this to work, the `redis_work_queue` must clearly mark the ending with `N` occurrences of the `sentinel`, where `N` is the desired number of processes. 
 
