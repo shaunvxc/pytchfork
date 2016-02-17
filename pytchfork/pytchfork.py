@@ -41,13 +41,16 @@ class pytchfork(object):
         self.procs.append(p)
 
     def _get_target_and_args(self, f, args, pid=0):
+
         self.kwargz['pid'] = pid
+
         if self.manage_redis:
             return _manage_redis, (f,), self.kwargz
-        elif self.manage_procs:
+
+        if self.manage_procs:
             return _manage_work, (f,), self.kwargz
-        else:
-            return f, args, {}
+
+        return f, args, {}
 
     def __enter__(self):
         self.pool = Pool(self.num_procs)
