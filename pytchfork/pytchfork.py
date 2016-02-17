@@ -41,7 +41,6 @@ class pytchfork(object):
         self.procs.append(p)
 
     def _get_target_and_args(self, f, args, pid=0):
-
         self.kwargz['pid'] = pid
 
         if self.manage_redis:
@@ -64,9 +63,8 @@ class pytchfork(object):
 
 ''' manage a worker process reading from a redis instance '''
 def _manage_redis(f, **kwargs):
-
-    redis_client = kwargs['redis_client']
     logger = _get_logger('pytchfork.out'.format(f.__name__), kwargs)
+    redis_client = kwargs['redis_client']
 
     while True:
         work = redis_client.brpop(kwargs['wq'])
