@@ -68,7 +68,7 @@ for x in range(0, num_procs):
   redis_client.lpush("work_queue", sentinel)
 
 # provide the sentinel to the decorator
-@pytchfork(num_procs, "work_queue", "done_queue", sentinel, redis_uri=uri, redis_port=port)
+@pytchfork(num_procs, read_from="work_queue", write_to="done_queue", sentinel=sentinel, redis_uri=uri, redis_port=port)
 def process_data(data):
   processed_data = do_something(data)
   return processed_data
