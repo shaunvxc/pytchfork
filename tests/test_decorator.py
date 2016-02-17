@@ -28,15 +28,15 @@ class Dummy():
     def test_call(self, l):
         l.append("1")
 
-    @pytchfork(NUM_PROCS, work_queue, done_queue, sentinel)
+    @pytchfork(NUM_PROCS, read_from=work_queue, write_to=done_queue, sentinel=sentinel)
     def test_process_data(data):
         return data
 
-    @pytchfork(NUM_PROCS, work_queue, sentinel=sentinel)
+    @pytchfork(NUM_PROCS, read_from=work_queue, sentinel=sentinel)
     def test_worker_only():
         pass
 
-    @pytchfork(NUM_PROCS,redis_work_queue, redis_done_queue, sentinel, redis_uri='localhost', redis_port=6379)
+    @pytchfork(NUM_PROCS, read_from=redis_work_queue, write_to=redis_done_queue, sentinel=sentinel, redis_uri='localhost', redis_port=6379)
     def test_redis_decorator(data):
         return data
 
