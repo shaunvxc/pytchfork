@@ -14,7 +14,6 @@ redis_work_queue = "test_in"
 redis_done_queue = "test_out"
 
 if sys.version_info[0] == 3:
-    print (" got here " )
     sentinel = "done".encode("latin-1")
 else:
     sentinel=  "done"
