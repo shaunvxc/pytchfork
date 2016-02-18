@@ -1,7 +1,7 @@
 # pytchfork
 [![Build Status](https://travis-ci.org/shaunvxc/pytchfork.svg?branch=master)](https://travis-ci.org/shaunvxc/pytchfork)
 [![Coverage Status](https://coveralls.io/repos/shaunvxc/pytchfork/badge.svg?branch=master&service=github)](https://coveralls.io/github/shaunvxc/pytchfork)
-[![PyPI](https://img.shields.io/pypi/v/nine.svg)](https://pypi.python.org/pypi/pytchfork/0.0.1)
+[![PyPI version](https://badge.fury.io/py/pytchfork.svg)](https://badge.fury.io/py/pytchfork)
 
 Pytchfork simplifies working with python's multiprocessing package.  By abstracting away the common boilerplate associated with forking processes and managing queues, pytchfork will allow you to write cleaner and more readable multiprocessing code.
 
