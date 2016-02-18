@@ -90,22 +90,6 @@ from pytchfork import pytchfork
 
 This construct ensures that the worker processes will be closed, joined and terminated upon the completion of the code in the block. 
 
-###Command Line
-You can also call pytchfork from the command line to run any command across multiple processes. 
-
-To run any command:
-
-```console
-$ pytchfork target_command [target_command_options] [num_procs] 
-```
-
-To run a python module/package:
-```console
-$ pytchfork -p your_target_module [python_target_options] [num_procs]
-```
-
-If the optional `num_procs` argument is not provided, 2 will be used as default.
-
 ## Contributing
 1. Fork it ( https://github.com/shaunvxc/pytchfork/fork )
 1. Create your feature branch (`git checkout -b new-feature`)
