@@ -1,7 +1,4 @@
-# pytchfork
-[![Build Status](https://travis-ci.org/shaunvxc/pytchfork.svg?branch=master)](https://travis-ci.org/shaunvxc/pytchfork)
-[![Coverage Status](https://coveralls.io/repos/shaunvxc/pytchfork/badge.svg?branch=master&service=github)](https://coveralls.io/github/shaunvxc/pytchfork)
-[![PyPI version](https://badge.fury.io/py/pytchfork.svg)](https://badge.fury.io/py/pytchfork)
+# pytchfork [![PyPI version](https://badge.fury.io/py/pytchfork.svg)](https://badge.fury.io/py/pytchfork) [![Build Status](https://travis-ci.org/shaunvxc/pytchfork.svg?branch=master)](https://travis-ci.org/shaunvxc/pytchfork) [![Coverage Status] (https://coveralls.io/repos/shaunvxc/pytchfork/badge.svg?branch=master&service=github)](https://coveralls.io/github/shaunvxc/pytchfork)
 
 Pytchfork simplifies working with python's multiprocessing package.  By abstracting away the common boilerplate associated with forking processes and managing queues, pytchfork will allow you to write cleaner and more readable multiprocessing code.
 
@@ -103,3 +100,4 @@ This construct ensures that the worker processes will be closed, joined and term
 1. Run the tests (`make test`)
 1. Push change to the branch (`git push origin new-feature`)
 1. Create a Pull Request
+
