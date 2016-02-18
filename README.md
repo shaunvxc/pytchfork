@@ -90,6 +90,11 @@ from pytchfork import pytchfork
 
 This construct ensures that the worker processes will be closed, joined and terminated upon the completion of the code in the block. 
 
+##Installation
+ *Requirements*: Python >= 2.7
+
+`$ pip install pytchfork`
+
 ## Contributing
 1. Fork it ( https://github.com/shaunvxc/pytchfork/fork )
 1. Create your feature branch (`git checkout -b new-feature`)
