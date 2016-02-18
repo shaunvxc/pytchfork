@@ -19,15 +19,14 @@ class pytchfork(object):
         self.kwargz = {}
         self.kwargz['read_from'] = read_from # work queue
         self.kwargz['write_to']  = write_to  # done queue
-        self.kwargz['sentinel'] = sentinel
-        self.kwargz['quiet'] = quiet
-        if self.manage_redis: self.kwargz['redis_client'] = redis.StrictRedis(host=redis_uri, port=redis_port)
+        self.kwargz['sentinel']  = sentinel
+        self.kwargz['quiet']     = quiet
+        self.kwargz['redis_client'] = None if not self.manage_redis else redis.StrictRedis(host=redis_uri, port=redis_port)
 
     def __call__(self, f):
         @wraps(f)
         def spawn_procs(*args, **kwargs):
-            self.kwargz['passed_args'] = args
-            self.kwargz['passed_kwargs'] = kwargs
+            self.kwargz['f_args'], self.kwargz['f_kwargs'] = args, kwargs
             for x in range(0, self.num_procs):
                 self._spawn_proc(f,x)
 
@@ -53,12 +52,13 @@ def _manage_worker(*args, **kwargs):
     f, pid = args[0], args[1]
     logger = _get_logger('pytchfork.out'.format(f.__name__), pid, kwargs)
 
-    if 'redis_client' in kwargs:
-        _manage_redis(f, pid, **kwargs)
-    elif kwargs['read_from']:
-        _manage_work(f, pid, **kwargs)
-    else:
-        f(*kwargs['passed_args'], **kwargs['passed_kwargs'])
+    if kwargs['redis_client']:
+        return _manage_redis(f, pid, **kwargs)
+
+    if kwargs['read_from']:
+        return _manage_work(f, pid, **kwargs)
+
+    f(*kwargs['f_args'], **kwargs['f_kwargs'])
 
 ''' manage a worker process reading from a redis instance '''
 def _manage_redis(f, pid, **kwargs):
@@ -68,11 +68,13 @@ def _manage_redis(f, pid, **kwargs):
 
     while True:
         work = redis_client.brpop(read_from)
+
         if sentinel and work[1] == sentinel:
             if write_to: redis_client.lpush(write_to, sentinel)
             logger.debug( "{}_{}: sentinel processed, closing...".format(f.__name__, pid))
             break
-        elif work is not None:
+
+        if work is not None:
             logger.debug( "{}_{}: processing `{}` ".format(f.__name__, pid, work[1]))
             res = f(work[1])
             if write_to: redis_client.lpush(write_to, res)
@@ -84,11 +86,13 @@ def _manage_work(f, pid, **kwargs):
 
     while True:
         work = read_from.get()
+
         if sentinel and work == sentinel:
             if write_to: write_to.put(sentinel)
             logger.debug( "{}_{}: sentinel processed, closing...".format(f.__name__, pid))
             break
-        elif work is not None:
+
+        if work is not None:
             logger.debug( "{}_{}: processing `{}` ".format(f.__name__, pid, work))
             res = f(work)
             if write_to: write_to.put(res)
