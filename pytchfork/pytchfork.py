@@ -8,7 +8,6 @@ import logging
 import multiprocessing_logging
 
 logging.basicConfig(level=logging.DEBUG)
-multiprocessing_logging.install_mp_handler()
 
 class pytchfork(object):
 
