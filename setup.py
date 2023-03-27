@@ -3,7 +3,7 @@
 from setuptools import setup
 
 install_requires = [
-    "redis==2.10.3",
+    "redis==4.5.3",
     "multiprocessing_logging",
 ]
 
