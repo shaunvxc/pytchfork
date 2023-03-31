@@ -2,5 +2,5 @@ coverage
 coveralls
 mock
 nose
-redis==2.10.3
+redis==4.4.4
 multiprocessing_logging==0.2.3
